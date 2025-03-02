@@ -1,31 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { Header } from "../../components/Header";
 import { SearchForm } from "../../components/SearchForm";
 import { Summary } from "../../components/Summary";
 import { PriceHighlight, TransactionsContainer, TransactionsTable } from "./styles";
-
-interface Transaction {
-    id: number;
-    description: string;
-    type: 'income' | 'outcome';
-    price: number;
-    category: string;
-    createdAt: string;
-}
+import { TransactionsContext } from "../../contexts/TransactionsContext";
+import { dataFormater, priceFormatter } from "../../utils/formatter";
 
 export function Transactions() {
-    const [transactions, setTransaction] = useState<Transaction[]>([])
-
-    async function loadTransaction() {
-        const response = await fetch('http://localhost:3333/transactions')
-        const data = await response.json();
-
-        setTransaction(data)
-    }
-
-    useEffect(() => {
-        loadTransaction();
-    }, [])
+    const { transactions } = useContext(TransactionsContext)
 
     return (
         <div>
@@ -37,15 +19,20 @@ export function Transactions() {
 
                 <TransactionsTable>
                     <tbody>
-                        {transactions.map(transactions => {
+                        {transactions.map(transaction => {
                             return (
-                                <tr key={transactions.id}>
-                                    <td width="40%">{transactions.description}</td>
+                                <tr key={transaction.id}>
+                                    <td width="40%">{transaction.description}</td>
                                     <td>
-                                        <PriceHighlight variant={transactions.type}>R$ {transactions.price},00</PriceHighlight>
+                                        <PriceHighlight variant={transaction.type}>
+                                            {transaction.type === 'outcome' && '- '}
+                                            {priceFormatter.format(transaction.price)}
+                                        </PriceHighlight>
                                     </td>
-                                    <td>{transactions.category}</td>
-                                    <td>{transactions.createdAt}</td>
+                                    <td>{transaction.category}</td>
+                                    <td>
+                                        {dataFormater.format(new Date(transaction.createdAt))}
+                                    </td>
                                 </tr>
                             )
                         })}
