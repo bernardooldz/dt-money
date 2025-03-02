@@ -1,9 +1,32 @@
+import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { SearchForm } from "../../components/SearchForm";
 import { Summary } from "../../components/Summary";
 import { PriceHighlight, TransactionsContainer, TransactionsTable } from "./styles";
 
+interface Transaction {
+    id: number;
+    description: string;
+    type: 'income' | 'outcome';
+    price: number;
+    category: string;
+    createdAt: string;
+}
+
 export function Transactions() {
+    const [transactions, setTransaction] = useState<Transaction[]>([])
+
+    async function loadTransaction() {
+        const response = await fetch('http://localhost:3333/transactions')
+        const data = await response.json();
+
+        setTransaction(data)
+    }
+
+    useEffect(() => {
+        loadTransaction();
+    }, [])
+
     return (
         <div>
             <Header />
@@ -14,22 +37,18 @@ export function Transactions() {
 
                 <TransactionsTable>
                     <tbody>
-                        <tr>
-                            <td width="50%">Desenvolvimento de site</td>
-                            <td>
-                                <PriceHighlight variant="income">R$ 12.000,00</PriceHighlight>
-                            </td>                            
-                            <td>Venda</td>
-                            <td>13/04/2025</td>
-                        </tr>
-                        <tr>
-                            <td width="50%">Hamburguer</td>
-                            <td>
-                                <PriceHighlight variant="outcome">R$ 59,90</PriceHighlight>
-                            </td>                            
-                            <td>Alimentação</td>
-                            <td>11/04/2025</td>
-                        </tr>
+                        {transactions.map(transactions => {
+                            return (
+                                <tr key={transactions.id}>
+                                    <td width="40%">{transactions.description}</td>
+                                    <td>
+                                        <PriceHighlight variant={transactions.type}>R$ {transactions.price},00</PriceHighlight>
+                                    </td>
+                                    <td>{transactions.category}</td>
+                                    <td>{transactions.createdAt}</td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </TransactionsTable>
             </TransactionsContainer>
