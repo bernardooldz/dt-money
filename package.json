@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:server": "json-server server.json -p 3333",
+    "dev:server": "json-server server.json -p 3333 -d 500",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^4.1.2",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-radio-group": "^1.2.3",
+    "axios": "^1.8.1",
     "json-server": "^0.17.4",
     "phosphor-react": "^1.4.1",
     "react": "^19.0.0",
