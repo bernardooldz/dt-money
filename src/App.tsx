@@ -2,7 +2,7 @@ import { ThemeProvider } from "styled-components"
 import { defaultTheme } from "./styles/themes/default"
 import { GlobaStyle } from "./styles/globals"
 import { Transactions } from "./pages/Transactions"
-import { TransactionsProvaider } from "./contexts/TransactionsContext"
+import { TransactionsProvider } from "./contexts/TransactionsContext";
 
 
 export function App() {
@@ -11,9 +11,9 @@ export function App() {
     <ThemeProvider theme={defaultTheme}>
       <GlobaStyle />
 
-      <TransactionsProvaider>
+      <TransactionsProvider>
         <Transactions />
-      </TransactionsProvaider>
+      </TransactionsProvider>
     </ThemeProvider>
   )
 }
